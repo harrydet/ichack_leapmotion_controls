@@ -1,36 +1,3 @@
-
-function concatData(id, data) {
-    return id + ": " + data + "<br>";
-}
-
-function getFingerName(fingerType) {
-    switch(fingerType) {
-        case 0:
-            return 'Thumb';
-            break;
-
-        case 1:
-            return 'Index';
-            break;
-
-        case 2:
-            return 'Middle';
-            break;
-
-        case 3:
-            return 'Ring';
-            break;
-
-        case 4:
-            return 'Pinky';
-            break;
-    }
-}
-
-function concatJointPosition(id, position) {
-    return id + ": " + position[0] + ", " + position[1] + ", " + position[2] + "<br>";
-}
-
 //Document ready event
 $( document ).ready(function(){
     //Component initialization
@@ -45,7 +12,20 @@ $( document ).ready(function(){
             frame.gestures.forEach(function(gesture){
                switch (gesture.type){
                    case "circle":
-                       console.log("Circle Gesture");
+                       var clockwise = false;
+                       var pointableID = gesture.pointableIds[0];
+                       var direction = frame.pointable(pointableID).direction;
+                       var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+
+                       if (dotProduct  >  0) clockwise = true;
+                       if(clockwise){
+                           incrementYear();
+                           updateChart();
+                       } else {
+                           decrementYear();
+                           updateChart();
+                       }
+                       console.log(clockwise?"Clockwise gesture":"Counter-clockwise gesture");
                        break;
                    case "keyTap":
                        console.log("Key Tap Gesture");
@@ -54,7 +34,24 @@ $( document ).ready(function(){
                        console.log("Screen Tap Gesture");
                        break;
                    case "swipe":
-                       console.log("Swipe Gesture");
+                       var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
+
+                       var swipeDirection;
+                       if (isHorizontal) {
+                           if (gesture.direction[0] > 0) {
+                               swipeDirection = "right";
+                           } else {
+                               swipeDirection = "left";
+                           }
+                       } else {
+                           if(gesture.direction[1] > 0){
+                               swipeDirection = "up";
+                           } else {
+                               swipeDirection = "down";
+                           }
+                       }
+                       $('ul.tabs').tabs('select_tab', 'test4');
+                       console.log("Swipe direction: " + swipeDirection);
                        break;
                }
             });

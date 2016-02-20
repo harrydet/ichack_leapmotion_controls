@@ -35,7 +35,7 @@ function createChart() {
     chart.draw(data, options);
 }
 
-function updateChart() {
+function updateChart(){
 
     var data = google.visualization.arrayToDataTable([
         ['ID', 'Life Expectancy', 'Fertility Rate', 'Region',     'Population'],
