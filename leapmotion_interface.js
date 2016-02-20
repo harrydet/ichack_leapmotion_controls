@@ -14,9 +14,13 @@ $( document ).ready(function(){
 
     var swiper = ctl.gesture('swipe');
 
-    var toleranceSwipe = 50;
-    var toleranceRotation = Math.PI/4;
-    var cooloff = 300;
+    var toleranceSwipe = 10;
+    var toleranceRotation = 0.55;
+    var cooloff = 3000;
+
+    //FPS control
+    var skipFrame = 10;
+    var currentFrame = 0;
 
     swiper.update(function(g) {
         if (Math.abs(g.translation()[0]) > toleranceSwipe || Math.abs(g.translation()[1]) > toleranceSwipe) {
@@ -28,11 +32,21 @@ $( document ).ready(function(){
         for(var h = 0; h < frame.hands.length; h++){
             var hand = frame.hands[h];
             var rollRadians = hand.roll();
+            console.log(rollRadians);
+            if(Math.abs(rollRadians) > toleranceRotation && currentFrame >= skipFrame && graphYearControl){
+                //console.log("Enough rotation");
+                if(rollRadians < 0){
+                    _.debounce(incrementChart(), cooloff);
+                } else {
+                    _.debounce(decrementChart(), cooloff);
+                }
 
-            if(Math.abs(rollRadians) > toleranceRotation){
-                console.log("Enough rotation");
             }
 
+        }
+        currentFrame++;
+        if(currentFrame > skipFrame){
+            currentFrame = 0;
         }
     });
 
@@ -96,6 +110,11 @@ $( document ).ready(function(){
 });
 
 function loadGraph(graphId){
+    if(graphId === 'graph1'){
+        graphYearControl = true;
+    } else {
+        graphYearControl = false;
+    }
     $('ul.tabs').tabs('select_tab', graphId, function(){createChart();});
 }
 
