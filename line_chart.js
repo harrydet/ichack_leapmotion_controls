@@ -134,7 +134,9 @@ function rightChangeBase() {
 
     currentBase = (currentBase + 1) % maxBase;
 
-    updateSymbolSet()
+    updateSymbolSet();
+
+    updateLineChart();
 }
 
 function leftChangeBase() {
@@ -148,7 +150,9 @@ function leftChangeBase() {
         currentBase--;
     }
 
-    updateSymbolSet()
+    updateSymbolSet();
+
+    updateLineChart();
 }
 
 function addSymbol() {
@@ -157,6 +161,8 @@ function addSymbol() {
 
         numberOfSymbols++;
     }
+
+    updateLineChart();
 }
 
 function removeSymbol() {
@@ -165,4 +171,6 @@ function removeSymbol() {
 
         numberOfSymbols--;
     }
+
+    updateLineChart();
 }
