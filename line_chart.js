@@ -1,5 +1,6 @@
-//google.charts.load('current', {'packages':['line']});
 google.charts.setOnLoadCallback(updateLineChart);
+
+var data_array = [];
 
 var dayInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -10,9 +11,12 @@ var minYearLineGraph = 1999;
 
 var month = 1;
 
-var base = 'EUR';
+var base = ['EUR', 'PLN', 'GBP', 'USD', 'CHF'];
+var currentBase = 0;
+var maxBase = base.length;
 
-var symbols = 'PLN,GBP,USD';
+var symbolSet = ['PLN', 'GBP', 'USD', 'CHF'];
+var numberOfSymbols = 4;
 
 function updateLineChart(){
 
@@ -33,7 +37,7 @@ function updateLineChart(){
     for (i = 1; i <= dayInMonth[month - 1]; i++) {
 
         (function(_i){$.getJSON('http://api.fixer.io/' + year + '-' + ((month < 10) ? '0' + month : month)
-            + '-' + ((i < 10) ? '0' + i : i) + '?base=' + base + '&symbols=' + symbols, function (_data) {
+            + '-' + ((i < 10) ? '0' + i : i) + '?base=' + base[currentBase] + '&symbols=' + symbolSet.slice(0, numberOfSymbols - 1).join(','), function (_data) {
 
             var _array = [];
             _array.push(_i);
@@ -66,8 +70,6 @@ function updateLineChart(){
             }
         }
     };
-
-
 }
 
 function incrementMonthLineChart() {
@@ -104,3 +106,63 @@ function decrementMonthLineChart() {
     updateLineChart();
 }
 
+function updateSymbolSet() {
+
+    if(currentBase == 0) {
+
+        symbolSet = ['PLN', 'GBP', 'USD', 'CHF'];
+    }
+    else if(currentBase == 1) {
+
+        symbolSet = ['EUR', 'GBP', 'USD', 'CHF'];
+    }
+    else if(currentBase == 2) {
+
+        symbolSet = ['PLN', 'EUR', 'USD', 'CHF'];
+    }
+    else if(currentBase == 3) {
+
+        symbolSet = ['PLN', 'GBP', 'EUR', 'CHF'];
+    }
+    else {
+
+        symbolSet = ['PLN', 'GBP', 'USD', 'EUR'];
+    }
+}
+
+function rightChangeBase() {
+
+    currentBase = (currentBase + 1) % maxBase;
+
+    updateSymbolSet()
+}
+
+function leftChangeBase() {
+
+    if(currentBase <= 0) {
+
+        currentBase = maxBase - 1;
+    }
+    else {
+
+        currentBase--;
+    }
+
+    updateSymbolSet()
+}
+
+function addSymbol() {
+
+    if(numberOfSymbols < 4) {
+
+        numberOfSymbols++;
+    }
+}
+
+function removeSymbol() {
+
+    if(numberOfSymbols > 0) {
+
+        numberOfSymbols--;
+    }
+}
