@@ -51,6 +51,8 @@ function updateLineChart(){
 
             count++;
             if(count >= dayInMonth[month - 1]){
+
+                data.sort([{column: 0}]);
                 var chart = new google.charts.Line(document.getElementById('chart1'));
                 chart.draw(data, options);
             }
