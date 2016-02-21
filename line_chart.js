@@ -1,12 +1,12 @@
-google.charts.load('current', {'packages':['line']});
-google.charts.setOnLoadCallback(updateChart);
+//google.charts.load('current', {'packages':['line']});
+google.charts.setOnLoadCallback(updateLineChart);
 
 var dayInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 var year = 2000;
 
-var maxYear = 2015;
-var minYear = 1999;
+var maxYearLineGraph = 2015;
+var minYearLineGraph = 1999;
 
 var month = 1;
 
@@ -14,7 +14,7 @@ var base = 'EUR';
 
 var symbols = 'PLN,GBP,USD';
 
-function updateChart(){
+function updateLineChart(){
 
     var i;
 
@@ -46,6 +46,10 @@ function updateChart(){
             data.addRow(_array);
 
             count++;
+            if(count >= dayInMonth[month - 1]){
+                var chart = new google.charts.Line(document.getElementById('chart1'));
+                chart.draw(data, options);
+            }
         });})(i);
     }
 
@@ -63,15 +67,10 @@ function updateChart(){
         }
     };
 
-    while(count < dayInMonth[month - 1]) {
 
-    }
-
-    var chart = new google.charts.Line(document.getElementById('chart'));
-    chart.draw(data, options);
 }
 
-function incrementMonth() {
+function incrementMonthLineChart() {
 
     if(month < 12) {
 
@@ -79,16 +78,16 @@ function incrementMonth() {
     }
     else {
 
-        if(year < maxYear) {
+        if(year < maxYearLineGraph) {
 
             year++;
             month = 1;
         }
     }
-    updateChart();
+    updateLineChart();
 }
 
-function decrementMonth() {
+function decrementMonthLineChart() {
 
     if(month > 1) {
 
@@ -96,12 +95,12 @@ function decrementMonth() {
     }
     else {
 
-        if(year > minYear) {
+        if(year > minYearLineGraph) {
 
             year--;
             month = 12;
         }
     }
-    updateChart();
+    updateLineChart();
 }
 

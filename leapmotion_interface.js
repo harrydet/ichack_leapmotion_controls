@@ -32,17 +32,16 @@ $( document ).ready(function(){
         for(var h = 0; h < frame.hands.length; h++){
             var hand = frame.hands[h];
             var rollRadians = hand.roll();
-            console.log(rollRadians);
+            //console.log(rollRadians);
             if(Math.abs(rollRadians) > toleranceRotation && currentFrame >= skipFrame && graphYearControl){
                 //console.log("Enough rotation");
                 if(rollRadians < 0){
-                    _.debounce(incrementChart(), cooloff);
+                    _.debounce(incrementChart($('ul li a.active').attr('href')), cooloff);
                 } else {
-                    _.debounce(decrementChart(), cooloff);
+                    _.debounce(decrementChart($('ul li a.active').attr('href')), cooloff);
                 }
 
             }
-
         }
         currentFrame++;
         if(currentFrame > skipFrame){
@@ -111,21 +110,38 @@ $( document ).ready(function(){
 
 function loadGraph(graphId){
     if(graphId === 'graph1'){
-        graphYearControl = true;
+        //graphYearControl = true;
     } else {
-        graphYearControl = false;
+        //graphYearControl = false;
     }
     $('ul.tabs').tabs('select_tab', graphId, function(){createChart();});
 }
 
-function incrementChart(){
-    incrementYear();
-    updateChart();
+function incrementChart(graphId){
+    switch(graphId){
+        case "#graph1":
+            incrementYear();
+            updateChart();
+            break;
+        case "#graph2":
+            incrementMonthLineChart();
+            updateLineChart();
+            break;
+    }
+
 }
 
-function decrementChart(){
-    decrementYear();
-    updateChart();
+function decrementChart(graphId){
+    switch(graphId){
+        case "#graph1":
+            decrementYear();
+            updateChart();
+            break;
+        case "#graph2":
+            decrementMonthLineChart();
+            updateLineChart();
+            break;
+    }
 }
 
 
