@@ -25,8 +25,31 @@ $( document ).ready(function(){
     swiper.update(function(g) {
         if (Math.abs(g.translation()[0]) > toleranceSwipe || Math.abs(g.translation()[1]) > toleranceSwipe) {
             Math.abs(g.translation()[0]) > toleranceSwipe ? (g.translation()[0] > 0 ? loadGraph('graph1') : loadGraph('graph2')):null;
+            //Math.abs(g.translation()[1]) > toleranceSwipe ? (g.translation()[1] > 0 ? addSymbol() : removeSymbol()):null;
         }
     });
+
+    /*ctl.on('gesture', function(gesture){
+        switch (gesture.type){
+            case "keyTap":
+                rightChangeBase();
+                break;
+            case "circle":
+                var clockwise = false;
+                var pointableID = gesture.pointableIds[0];
+                var direction = ctl.frame(0).pointable(pointableID).direction;
+                var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+
+                if (dotProduct  >  0) clockwise = true;
+
+                if(clockwise){
+                    _.debounce(addSymbol(), 3000);
+                } else {
+                    _.debounce(removeSymbol(), 3000);
+                }
+
+        }
+    });*/
 
     ctl.on('frame', function (frame) {
         for(var h = 0; h < frame.hands.length; h++){
@@ -40,6 +63,17 @@ $( document ).ready(function(){
                 } else {
                     _.debounce(decrementChart($('ul li a.active').attr('href')), cooloff);
                 }
+
+            }
+        }
+        for(var g = 0; g < frame.gestures.length; g++){
+            var gesture = frame.gestures[g];
+            switch (gesture.type){
+                case "keyTap":
+                    rightChangeBase();
+                    break;
+                case "screenTap":
+                    _.debounce(loopSymbol(), 3000);
 
             }
         }

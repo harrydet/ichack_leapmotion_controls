@@ -24,12 +24,12 @@ function updateLineChart(){
 
     var data = new google.visualization.DataTable();
 
-    var symbolArray = symbols.split(',');
+    //var symbolArray = symbols.split(',');
 
     data.addColumn('number', 'Date');
-    for (i = 0; i < symbolArray.length; i++) {
+    for (i = 0; i < numberOfSymbols; i++) {
 
-        data.addColumn('number', symbolArray[i]);
+        data.addColumn('number', symbolSet[i]);
     }
 
     var count = 0;
@@ -37,7 +37,7 @@ function updateLineChart(){
     for (i = 1; i <= dayInMonth[month - 1]; i++) {
 
         (function(_i){$.getJSON('http://api.fixer.io/' + year + '-' + ((month < 10) ? '0' + month : month)
-            + '-' + ((i < 10) ? '0' + i : i) + '?base=' + base[currentBase] + '&symbols=' + symbolSet.slice(0, numberOfSymbols - 1).join(','), function (_data) {
+            + '-' + ((i < 10) ? '0' + i : i) + '?base=' + base[currentBase] + '&symbols=' + symbolSet.slice(0, numberOfSymbols).join(','), function (_data) {
 
             var _array = [];
             _array.push(_i);
@@ -59,7 +59,7 @@ function updateLineChart(){
 
     var options = {
         chart: {
-            title: 'Currency rates of popular currencies against ' + base,
+            title: 'Currency rates of popular currencies against ' + base[currentBase],
             subtitle: 'in ' + month + '/' + year
         },
         width: 900,
@@ -157,19 +157,37 @@ function leftChangeBase() {
 
 function addSymbol() {
 
+    console.log(numberOfSymbols + 'A');
+
     if(numberOfSymbols < 4) {
 
         numberOfSymbols++;
-    }
 
-    updateLineChart();
+        updateLineChart();
+    }
 }
 
 function removeSymbol() {
 
-    if(numberOfSymbols > 0) {
+    console.log(numberOfSymbols + 'R');
+
+    if(numberOfSymbols > 1) {
 
         numberOfSymbols--;
+
+        updateLineChart();
+    }
+}
+
+function loopSymbol() {
+
+    if(numberOfSymbols >= 4) {
+
+        numberOfSymbols = 1;
+    }
+    else {
+
+        numberOfSymbols++;
     }
 
     updateLineChart();
